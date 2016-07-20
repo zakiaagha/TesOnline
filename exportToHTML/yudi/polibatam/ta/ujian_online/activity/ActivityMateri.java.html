@@ -1,0 +1,402 @@
+<html>
+<head>
+<title>ActivityMateri.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+ActivityMateri.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+
+<span class="s0">package </span><span class="s1">yudi.polibatam.ta.ujian_online.activity; 
+ 
+</span><span class="s2">/** 
+ * Created by my_Pc on 4/30/2016. 
+ */</span><span class="s1"> 
+ 
+</span><span class="s0">import </span><span class="s1">android.app.ProgressDialog; 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.util.Log; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Request; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Response; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.VolleyError; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.StringRequest; 
+ 
+</span><span class="s0">import </span><span class="s1">org.json.JSONArray; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONException; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONObject; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+</span><span class="s0">import </span><span class="s1">java.util.HashMap; 
+</span><span class="s0">import </span><span class="s1">java.util.Map; 
+ 
+</span><span class="s0">import </span><span class="s1">yudi.polibatam.ta.ujian_online.R; 
+</span><span class="s0">import </span><span class="s1">yudi.polibatam.ta.ujian_online.app.AppConfig; 
+</span><span class="s0">import </span><span class="s1">yudi.polibatam.ta.ujian_online.app.AppController; 
+</span><span class="s0">import </span><span class="s1">yudi.polibatam.ta.ujian_online.helper.SQLiteHandler; 
+ 
+</span><span class="s0">public class </span><span class="s1">ActivityMateri </span><span class="s0">extends </span><span class="s1">AppCompatActivity { 
+    </span><span class="s0">private static final </span><span class="s1">String TAG = ActivityMain.</span><span class="s0">class</span><span class="s1">.getSimpleName(); 
+    </span><span class="s0">private </span><span class="s1">Button btnTMesin; 
+    </span><span class="s0">private </span><span class="s1">Button btnTMultimedia; 
+    </span><span class="s0">private </span><span class="s1">Button btnTOtomotif; 
+    </span><span class="s0">private </span><span class="s1">ProgressDialog pDialog; 
+    </span><span class="s0">private </span><span class="s1">SQLiteHandler db; 
+ 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_JSON_ARRAY = </span><span class="s3">&quot;pertanyaan&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_PERTANYAAN = </span><span class="s3">&quot;desk_pertanyaan&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_JAWABAN = </span><span class="s3">&quot;jawaban&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_PILA = </span><span class="s3">&quot;pilihanA&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_PILB = </span><span class="s3">&quot;pilihanB&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_PILC = </span><span class="s3">&quot;pilihanC&quot;</span><span class="s1">; 
+    </span><span class="s0">private static final </span><span class="s1">String TAG_PILD = </span><span class="s3">&quot;pilihanD&quot;</span><span class="s1">; 
+ 
+    </span><span class="s2">// Hashmap for ListView</span><span class="s1"> 
+    ArrayList&lt;HashMap&lt;String, String&gt;&gt; soalList; 
+    JSONArray pertanyaan = </span><span class="s0">null</span><span class="s1">; 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_materi); 
+ 
+        soalList = </span><span class="s0">new </span><span class="s1">ArrayList&lt;HashMap&lt;String, String&gt;&gt;(); 
+        btnTMesin = (Button) findViewById(R.id.btnTMesin); 
+        btnTMultimedia = (Button) findViewById(R.id.btnTMultimedia); 
+        btnTOtomotif = (Button) findViewById(R.id.btnTOtomotif); 
+ 
+        </span><span class="s2">// Progress dialog</span><span class="s1"> 
+        pDialog = </span><span class="s0">new </span><span class="s1">ProgressDialog(</span><span class="s0">this</span><span class="s1">); 
+        pDialog.setCancelable(</span><span class="s0">false</span><span class="s1">); 
+ 
+        </span><span class="s2">// kontrol SQLite database</span><span class="s1"> 
+        db = </span><span class="s0">new </span><span class="s1">SQLiteHandler(getApplicationContext()); 
+ 
+ 
+        btnTMesin.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+ 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+ 
+                String mapelMesin = btnTMesin.getText().toString().trim(); 
+ 
+                </span><span class="s2">// cek isian form data</span><span class="s1"> 
+                </span><span class="s0">if </span><span class="s1">(!mapelMesin.isEmpty()) { 
+                    </span><span class="s2">// cek tombol materi</span><span class="s1"> 
+                    ambilsoalMesin(mapelMesin); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s2">// jika form kosong</span><span class="s1"> 
+                    Toast.makeText(getApplicationContext(), 
+                            </span><span class="s3">&quot;silahkan pilih mata pelajaran&quot;</span><span class="s1">, Toast.LENGTH_LONG) 
+                            .show(); 
+                } 
+            } 
+        }); 
+ 
+        btnTMultimedia.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+ 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+ 
+                String mapelMultimedia= btnTMultimedia.getText().toString().trim(); 
+ 
+                </span><span class="s2">// cek isian form data</span><span class="s1"> 
+                </span><span class="s0">if </span><span class="s1">(!mapelMultimedia.isEmpty()) { 
+                    </span><span class="s2">// cek tombol materi</span><span class="s1"> 
+                    ambilsoalMultimedia(mapelMultimedia); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s2">// jika form kosong</span><span class="s1"> 
+                    Toast.makeText(getApplicationContext(), 
+                            </span><span class="s3">&quot;silahkan pilih mata pelajaran&quot;</span><span class="s1">, Toast.LENGTH_LONG) 
+                            .show(); 
+                } 
+            } 
+        }); 
+ 
+        btnTOtomotif.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+ 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+ 
+                String mapelOtomotif = btnTOtomotif.getText().toString().trim(); 
+ 
+                </span><span class="s2">// cek isian form data</span><span class="s1"> 
+                </span><span class="s0">if </span><span class="s1">(!mapelOtomotif.isEmpty()) { 
+                    </span><span class="s2">// cek tombol materi</span><span class="s1"> 
+                    ambilsoalOtomotif(mapelOtomotif); 
+                } </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s2">// jika form kosong</span><span class="s1"> 
+                    Toast.makeText(getApplicationContext(), 
+                            </span><span class="s3">&quot;silahkan pilih mata pelajaran&quot;</span><span class="s1">, Toast.LENGTH_LONG) 
+                            .show(); 
+                } 
+            } 
+        }); 
+    } 
+ 
+    </span><span class="s2">/** 
+     * fungsi fungsi ambil soal 
+     * */</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">ambilsoalMesin(</span><span class="s0">final </span><span class="s1">String mapel) { 
+        String tag_string_req = </span><span class="s3">&quot;req_pertanyaan&quot;</span><span class="s1">; 
+ 
+        pDialog.setMessage(</span><span class="s3">&quot;Ambil Soal ...&quot;</span><span class="s1">); 
+        showDialog(); 
+ 
+        StringRequest strReq = </span><span class="s0">new </span><span class="s1">StringRequest(Request.Method.POST, 
+                AppConfig.URL_AMBIL_SOAL, </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                Log.d(TAG, </span><span class="s3">&quot;Ambil Soal Berhasil: &quot; </span><span class="s1">+ response); 
+                hideDialog(); 
+ 
+ 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jObj = </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">error = jObj.getBoolean(</span><span class="s3">&quot;error&quot;</span><span class="s1">); 
+ 
+                    </span><span class="s2">// cek error dari json</span><span class="s1"> 
+                    </span><span class="s0">if </span><span class="s1">(!error) { 
+                        </span><span class="s2">// Getting JSON Array node</span><span class="s1"> 
+                        pertanyaan = jObj.getJSONArray(TAG_JSON_ARRAY); 
+ 
+                        </span><span class="s2">// looping semua soal</span><span class="s1"> 
+                        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s1">; i &lt; pertanyaan.length(); i++) { 
+                            JSONObject c = pertanyaan.getJSONObject(i); 
+ 
+                            db.addPertanyaan(c.getString(TAG_PERTANYAAN), c.getString(TAG_JAWABAN), 
+                                    c.getString(TAG_PILA), c.getString(TAG_PILB), c.getString(TAG_PILC), c.getString(TAG_PILD)); 
+ 
+                            Intent intent = </span><span class="s0">new </span><span class="s1">Intent(ActivityMateri.</span><span class="s0">this</span><span class="s1">, ActivityTeknikMesin.</span><span class="s0">class</span><span class="s1">); 
+                            startActivity(intent); 
+                            finish(); 
+                        } 
+                    } </span><span class="s0">else </span><span class="s1">{ 
+                        </span><span class="s2">// error pesan login</span><span class="s1"> 
+                        String  errorMsg = jObj.getString(</span><span class="s3">&quot;pesan&quot;</span><span class="s1">); 
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show(); 
+                    } 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    </span><span class="s2">// JSON error</span><span class="s1"> 
+                    e.printStackTrace(); 
+                    Toast.makeText(getApplicationContext(), </span><span class="s3">&quot;Json error: &quot; </span><span class="s1">+ e.getMessage(), Toast.LENGTH_LONG).show(); 
+                } 
+ 
+            } 
+        }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+                Log.e(TAG, </span><span class="s3">&quot;Ambil Soal Gagal: &quot; </span><span class="s1">+ error.getMessage()); 
+                Toast.makeText(getApplicationContext(), 
+                        error.getMessage(), Toast.LENGTH_LONG).show(); 
+                hideDialog(); 
+            } 
+        }) { 
+ 
+            @Override 
+            </span><span class="s0">protected </span><span class="s1">Map&lt;String, String&gt; getParams() { 
+                </span><span class="s2">// post parameters ke login url</span><span class="s1"> 
+                Map&lt;String, String&gt; params = </span><span class="s0">new </span><span class="s1">HashMap&lt;String, String&gt;(); 
+                params.put(</span><span class="s3">&quot;mapel&quot;</span><span class="s1">, mapel); 
+ 
+                </span><span class="s0">return </span><span class="s1">params; 
+            } 
+ 
+        }; 
+ 
+        </span><span class="s2">// menambahkan permintaan</span><span class="s1"> 
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req); 
+    } 
+ 
+    </span><span class="s2">/** 
+     * fungsi fungsi ambil soal 
+     * */</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">ambilsoalMultimedia(</span><span class="s0">final </span><span class="s1">String mapel) { 
+        String tag_string_req = </span><span class="s3">&quot;req_pertanyaan&quot;</span><span class="s1">; 
+ 
+        pDialog.setMessage(</span><span class="s3">&quot;Ambil Soal ...&quot;</span><span class="s1">); 
+        showDialog(); 
+ 
+        StringRequest strReq = </span><span class="s0">new </span><span class="s1">StringRequest(Request.Method.POST, 
+                AppConfig.URL_AMBIL_SOAL, </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                Log.d(TAG, </span><span class="s3">&quot;Ambil Soal Berhasil: &quot; </span><span class="s1">+ response); 
+                hideDialog(); 
+ 
+ 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jObj = </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">error = jObj.getBoolean(</span><span class="s3">&quot;error&quot;</span><span class="s1">); 
+ 
+                    </span><span class="s2">// cek error dari json</span><span class="s1"> 
+                    </span><span class="s0">if </span><span class="s1">(!error) { 
+                        </span><span class="s2">// Getting JSON Array node</span><span class="s1"> 
+                        pertanyaan = jObj.getJSONArray(TAG_JSON_ARRAY); 
+ 
+                        </span><span class="s2">// looping semua soal</span><span class="s1"> 
+                        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s1">; i &lt; pertanyaan.length(); i++) { 
+                            JSONObject c = pertanyaan.getJSONObject(i); 
+ 
+                            db.addPertanyaan(c.getString(TAG_PERTANYAAN), c.getString(TAG_JAWABAN), 
+                                    c.getString(TAG_PILA), c.getString(TAG_PILB), c.getString(TAG_PILC), c.getString(TAG_PILD)); 
+ 
+                            Intent intent = </span><span class="s0">new </span><span class="s1">Intent(ActivityMateri.</span><span class="s0">this</span><span class="s1">, ActivityTeknikMultimedia.</span><span class="s0">class</span><span class="s1">); 
+                            startActivity(intent); 
+                            finish(); 
+                        } 
+                    } </span><span class="s0">else </span><span class="s1">{ 
+                        </span><span class="s2">// error pesan login</span><span class="s1"> 
+                        String  errorMsg = jObj.getString(</span><span class="s3">&quot;pesan&quot;</span><span class="s1">); 
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show(); 
+                    } 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    </span><span class="s2">// JSON error</span><span class="s1"> 
+                    e.printStackTrace(); 
+                    Toast.makeText(getApplicationContext(), </span><span class="s3">&quot;Json error: &quot; </span><span class="s1">+ e.getMessage(), Toast.LENGTH_LONG).show(); 
+                } 
+ 
+            } 
+        }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+                Log.e(TAG, </span><span class="s3">&quot;Ambil Soal Gagal: &quot; </span><span class="s1">+ error.getMessage()); 
+                Toast.makeText(getApplicationContext(), 
+                        error.getMessage(), Toast.LENGTH_LONG).show(); 
+                hideDialog(); 
+            } 
+        }) { 
+ 
+            @Override 
+            </span><span class="s0">protected </span><span class="s1">Map&lt;String, String&gt; getParams() { 
+                </span><span class="s2">// post parameters ke login url</span><span class="s1"> 
+                Map&lt;String, String&gt; params = </span><span class="s0">new </span><span class="s1">HashMap&lt;String, String&gt;(); 
+                params.put(</span><span class="s3">&quot;mapel&quot;</span><span class="s1">, mapel); 
+ 
+                </span><span class="s0">return </span><span class="s1">params; 
+            } 
+ 
+        }; 
+ 
+        </span><span class="s2">// menambahkan permintaan</span><span class="s1"> 
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req); 
+    } 
+ 
+    </span><span class="s2">/** 
+     * fungsi ambil soal 
+     * */</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">ambilsoalOtomotif(</span><span class="s0">final </span><span class="s1">String mapel) { 
+        String tag_string_req = </span><span class="s3">&quot;req_pertanyaan&quot;</span><span class="s1">; 
+ 
+        pDialog.setMessage(</span><span class="s3">&quot;Ambil Soal ...&quot;</span><span class="s1">); 
+        showDialog(); 
+ 
+        StringRequest strReq = </span><span class="s0">new </span><span class="s1">StringRequest(Request.Method.POST, 
+                AppConfig.URL_AMBIL_SOAL, </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                Log.d(TAG, </span><span class="s3">&quot;Ambil Soal Berhasil: &quot; </span><span class="s1">+ response); 
+                hideDialog(); 
+ 
+ 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jObj = </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">error = jObj.getBoolean(</span><span class="s3">&quot;error&quot;</span><span class="s1">); 
+ 
+                    </span><span class="s2">// cek error dari json</span><span class="s1"> 
+                    </span><span class="s0">if </span><span class="s1">(!error) { 
+                        </span><span class="s2">// Getting JSON Array node</span><span class="s1"> 
+                        pertanyaan = jObj.getJSONArray(TAG_JSON_ARRAY); 
+ 
+                        </span><span class="s2">// looping semua soal</span><span class="s1"> 
+                        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s4">0</span><span class="s1">; i &lt; pertanyaan.length(); i++) { 
+                            JSONObject c = pertanyaan.getJSONObject(i); 
+ 
+                            db.addPertanyaan(c.getString(TAG_PERTANYAAN), c.getString(TAG_JAWABAN), 
+                                    c.getString(TAG_PILA), c.getString(TAG_PILB), c.getString(TAG_PILC), c.getString(TAG_PILD)); 
+ 
+                            Intent intent = </span><span class="s0">new </span><span class="s1">Intent(ActivityMateri.</span><span class="s0">this</span><span class="s1">, ActivityTeknikOtomotif.</span><span class="s0">class</span><span class="s1">); 
+                            startActivity(intent); 
+                            finish(); 
+                        } 
+                    } </span><span class="s0">else </span><span class="s1">{ 
+                        </span><span class="s2">// error pesan login</span><span class="s1"> 
+                        String  errorMsg = jObj.getString(</span><span class="s3">&quot;pesan&quot;</span><span class="s1">); 
+                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show(); 
+                    } 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    </span><span class="s2">// JSON error</span><span class="s1"> 
+                    e.printStackTrace(); 
+                    Toast.makeText(getApplicationContext(), </span><span class="s3">&quot;Json error: &quot; </span><span class="s1">+ e.getMessage(), Toast.LENGTH_LONG).show(); 
+                } 
+ 
+            } 
+        }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+                Log.e(TAG, </span><span class="s3">&quot;Ambil Soal Gagal: &quot; </span><span class="s1">+ error.getMessage()); 
+                Toast.makeText(getApplicationContext(), 
+                        error.getMessage(), Toast.LENGTH_LONG).show(); 
+                hideDialog(); 
+            } 
+        }) { 
+ 
+            @Override 
+            </span><span class="s0">protected </span><span class="s1">Map&lt;String, String&gt; getParams() { 
+                </span><span class="s2">// post parameters ke login url</span><span class="s1"> 
+                Map&lt;String, String&gt; params = </span><span class="s0">new </span><span class="s1">HashMap&lt;String, String&gt;(); 
+                params.put(</span><span class="s3">&quot;mapel&quot;</span><span class="s1">, mapel); 
+ 
+                </span><span class="s0">return </span><span class="s1">params; 
+            } 
+ 
+        }; 
+ 
+        </span><span class="s2">// menambahkan permintaan</span><span class="s1"> 
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req); 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">showDialog() { 
+        </span><span class="s0">if </span><span class="s1">(!pDialog.isShowing()) 
+            pDialog.show(); 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">hideDialog() { 
+        </span><span class="s0">if </span><span class="s1">(pDialog.isShowing()) 
+            pDialog.dismiss(); 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">onBackPressed() { 
+        </span><span class="s2">// your code.</span><span class="s1"> 
+        db.deletePertanyaan(); 
+ 
+        </span><span class="s2">// Launching the login activity</span><span class="s1"> 
+        Intent intent = </span><span class="s0">new </span><span class="s1">Intent(ActivityMateri.</span><span class="s0">this</span><span class="s1">, ActivityMain.</span><span class="s0">class</span><span class="s1">); 
+        startActivity(intent); 
+        finish(); 
+    } 
+} 
+</span></pre>
+</body>
+</html>

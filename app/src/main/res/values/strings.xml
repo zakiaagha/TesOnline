@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Ujian Online</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_materi">Pilih Jurusan</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_hasil">Hasil</string>
+    <string name="btn_bantuan">Bantuan</string>
+    <string name="btn_link_to_totomotif">Teknik Otomotif</string>
+    <string name="btn_link_to_tmultimedia">Teknik Multimedia</string>
+    <string name="btn_link_to_tmesin">Teknik Mesin</string>
+    <string name="selamat_datang">Selamat Datang, </string>
+    <string name="btn_logout">LOGOUT</string>
+
+</resources>

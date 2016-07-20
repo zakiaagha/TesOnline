@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_register"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <LinearLayout android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="20dip"
+        android:gravity="top|center">
+
+        <ImageView android:src="@drawable/logo"
+            android:layout_width="256dp"
+            android:layout_height="125dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/selamat_datang"
+                android:textSize="20dp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/nama" />
+
+        <!-- Tombol Pilih Materi -->
+        <Button
+            android:id="@+id/btnMateri"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#eceef1"
+            android:text="@string/btn_materi"
+            android:textColor="@color/lbl_name" />
+
+        <!-- Tombol Hasil-->
+        <Button
+            android:id="@+id/btnHasil"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#eceef1"
+            android:text="@string/btn_hasil"
+            android:textColor="@color/lbl_name" />
+
+        <!-- Tombol Bantuan-->
+        <Button
+            android:id="@+id/btnBantuan"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#eceef1"
+            android:text="@string/btn_bantuan"
+            android:textColor="@color/lbl_name" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@color/bg_register"
+            android:text="@string/btn_logout"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>
