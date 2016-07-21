@@ -3,6 +3,10 @@ Aplikasi digunakan untuk melakukan ujian online android dan web
 
 <p><b>Admin WEB - Login</b><p>
 <img src="db/weblogin.PNG" width="200"/>
+<p><b>Admin WEB - Pengguna</b><p>
+<img src="db/datapengguna.PNG" width="200"/>
+<p><b>Admin WEB - Jurusan</b><p>
+<img src="db/mapel.PNG" width="200"/>
 <p><b>Admin WEB - Pertanyaan</b><p>
 <img src="db/pertanyaan.PNG" width="200"/>
 <p><b>Admin WEB - Jawaban</b><p>
